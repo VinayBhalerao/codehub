@@ -1,0 +1,31 @@
+---
+layout: default
+title: Basic HTTP Auth with user_key
+---
+
+{% highlight lua %}
+--[[
+Authorization logic
+]]--
+ 
+function get_auth_params(where, method)
+	local params = {}
+	if where == "headers" then
+		params = ngx.req.get_headers()
+	elseif where == "basicauth" then
+		params = ngx.req.get_headers()
+		if params["Authorization"] then
+			local m = ngx.re.match(params["Authorization"], "Basic\\s(.+)")
+			if m then
+				params.user_key = m[1]
+			end
+		end	 
+		elseif method == "GET" then
+			params = ngx.req.get_uri_args()
+		else
+			ngx.req.read_body()
+			params = ngx.req.get_post_args()
+		end
+	return first_values(params)
+end
+{% endhighlight %}
