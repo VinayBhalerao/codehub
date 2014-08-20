@@ -1,15 +1,15 @@
 # Site settings
-title: Your awesome title
-email: your-email@domain.com
-description: "Write an awesome description for your new site here. You can edit this line in _config.yml. It will appear in your document head meta (for Google search results) and in your feed.xml site description."
+title: Code Hub
+email: andrzej@3scale.net
+description: "3scale Code Hub snippet library"
 baseurl: ""
-url: "http://yourdomain.com"
-twitter_username: jekyllrb
-github_username:  jekyll
+url: "http://codehub.3scale.net"
+github_username:  jerzyn
 
 # Build settings
 markdown: kramdown
 permalink: pretty
+include: search.json
 
 highlighter: pygments
 gems: ['jekyll-lunr-js-search']
