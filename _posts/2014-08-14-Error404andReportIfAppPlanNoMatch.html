@@ -15,7 +15,7 @@ title: Error 404 and report if app plan doesn't match
 <p><strong>Description:</strong> First of all, some of the money will go directly to the speakers to compensate their costs to come to Barcelona and give some great talks. If that's not convincing enough, we'll serve you refreshments, have two coffee breaks and a lunch break. And we're not talking conference food, but a Mediterranean-style menu, tapas, sandwiches and other snacks prepared by awesome local chefs.</p>
 
 <h3>nginx.conf</h3>
-{% highlight  linenos %}
+{% highlight nginx linenos %}
 location = /threescale_report {
 internal;
 set $provider_key "PROVIDERKEY";
@@ -26,7 +26,7 @@ proxy_set_header Host "su1.3scale.net";
 {% endhighlight %}
 
 <h3>nginx.lua</h3>
-{% highlight nginx linenos %}
+{% highlight lua linenos %}
 --------------------------------------
 -- authrep ---------------------------
 --------------------------------------
