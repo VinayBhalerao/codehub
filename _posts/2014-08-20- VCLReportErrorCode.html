@@ -1,0 +1,37 @@
+---
+layout: default
+title: VCL report error code
+---
+
+<h1>{{ page.title }}</h1>
+<dl>
+	<dt>Author:</dt>
+		<dd>Victor Delgado</dd>
+	<dt>Version:</dt>
+		<dd>1.0</dd>
+	<dt>Language:</dt>
+		<dd>VCL</dd>
+</dl>
+<p><strong>Description:</strong> First of all, some of the money will go directly to the speakers to compensate their costs to come to Barcelona and give some great talks. If that's not convincing enough, we'll serve you refreshments, have two coffee breaks and a lunch break. And we're not talking conference food, but a Mediterranean-style menu, tapas, sandwiches and other snacks prepared by awesome local chefs.</p>
+
+{% highlight c linenos %}
+sub vcl_fetch {
+	if (req.http.X-3scale-authorization) {
+		## cache the authorization from 3scale
+		## CHANGEME: below the TTL of the response of 3scale's backend
+		set beresp.ttl = 60s;
+	}
+	else {
+		if (beresp.status != 200) {
+			std.log("DEBUG: " + beresp.status); # beresp.status contains the response code from the backend
+			# here we can send a report call to 3scale to keep track
+			# of the number of error responses from the backend
+			set req.http.X-3scale-report = "provider_key=" + "YOURPROVIDERKEY";
+			set req.http.X-3scale-report = req.http.X-3scale-report + "&transactions[0][app_id]=49399587";
+			set req.http.X-3scale-report = req.http.X-3scale-report + req.http.X-3scale-app_id;
+			set req.http.X-3scale-report = req.http.X-3scale-report + "&transactions[0][usage][error_400]=1";
+			if(threescale.send_post_request_threaded("su1.3scale.net","80","/transactions.xml","",req.http.X-3scale-report)==0){}
+		}
+	}
+}
+{% endhighlight %}

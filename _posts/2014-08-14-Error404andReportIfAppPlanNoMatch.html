@@ -1,0 +1,75 @@
+---
+layout: default
+title: Error 404 and report if app plan doesn't match
+---
+
+<h1>{{ page.title }}</h1>
+<dl>
+	<dt>Author:</dt>
+		<dd>Victor Delgado</dd>
+	<dt>Version:</dt>
+		<dd>1.0</dd>
+	<dt>Language:</dt>
+		<dd>Lua&Nginx Config</dd>
+</dl>
+<p><strong>Description:</strong> First of all, some of the money will go directly to the speakers to compensate their costs to come to Barcelona and give some great talks. If that's not convincing enough, we'll serve you refreshments, have two coffee breaks and a lunch break. And we're not talking conference food, but a Mediterranean-style menu, tapas, sandwiches and other snacks prepared by awesome local chefs.</p>
+
+<h3>nginx.conf</h3>
+{% highlight  linenos %}
+location = /threescale_report {
+internal;
+set $provider_key "PROVIDERKEY";
+ 
+proxy_pass http://threescale_backend/transactions.xml;
+proxy_set_header Host "su1.3scale.net";
+}
+{% endhighlight %}
+
+<h3>nginx.lua</h3>
+{% highlight nginx linenos %}
+--------------------------------------
+-- authrep ---------------------------
+--------------------------------------
+function authrep(params, service)
+ngx.var.cached_key = ngx.var.cached_key .. ":" .. ngx.var.usage
+local api_keys = ngx.shared.api_keys
+local is_known = api_keys:get(ngx.var.cached_key)
+ 
+if is_known ~= 200 then
+local res = ngx.location.capture("/threescale_authrep", { share_all_vars = true })
+ 
+-- IN HERE YOU DEFINE THE ERROR IF CREDENTIALS ARE PASSED, BUT THEY ARE NOT VALID
+if res.status ~= 200 then
+-- remove the key, if it's not 200 let's go the slow route, to 3scale's backend
+api_keys:delete(ngx.var.cached_key)
+ngx.status = res.status
+ngx.header.content_type = "application/json"
+error_authorization_failed(service)
+else
+-- check for application plan in authrep response
+local qa_plan = ngx.re.match(res.body,[=[<plan>.+QA]=])
+ 
+if not qa_plan then
+-- if application plan is not "Sandbox" report
+-- to 3scale and return 404 error to the client
+local transaction = "transactions[0][app_id]=" .. params.app_id ..
+"&transactions[0][usage][hits]=1"
+ 
+local report_body = "provider_key=" .. ngx.var.provider_key ..
+"&service_id=" .. ngx.var.service_id ..
+"&transactions=" .. transaction
+ 
+ngx.location.capture("/threescale_report", {
+method = ngx.HTTP_POST,
+body = report_body,
+share_all_vars = true
+})
+error_no_match(service)
+end
+ 
+api_keys:set(ngx.var.cached_key,200)
+end
+ngx.var.cached_key = nil
+end
+end
+{% endhighlight %}

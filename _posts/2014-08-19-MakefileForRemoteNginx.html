@@ -1,0 +1,76 @@
+---
+layout: default
+title: Makefile for working with a remote Nginx
+---
+
+<h1>{{ page.title }}</h1>
+<dl>
+  <dt>Author:</dt>
+    <dd>Victor Delgado</dd>
+  <dt>Version:</dt>
+    <dd>1.0</dd>
+  <dt>Language:</dt>
+    <dd>Makefile</dd>
+</dl>
+<p><strong>Description:</strong> First of all, some of the money will go directly to the speakers to compensate their costs to come to Barcelona and give some great talks. If that's not convincing enough, we'll serve you refreshments, have two coffee breaks and a lunch break. And we're not talking conference food, but a Mediterranean-style menu, tapas, sandwiches and other snacks prepared by awesome local chefs.</p>
+
+{% highlight basemake linenos %}
+#### SETTINGS
+NGINXDIR = /usr/local/openresty/nginx/
+NGXCONF = nginx_dummycustomer.conf
+USER = ubuntu
+REMOTE = ec2-54-224-138-186.compute-1.amazonaws.com
+REMOTEDIR = /home/$(USER)/dummycustomer/
+PRIVATEKEY = /Users/victordg/.ssh/aws/vdg-3scale.pem
+####
+ 
+ 
+ngx_files = $(shell find . -name '*.lua' -o -name '*.conf')
+ngx_bin = $(NGINXDIR)sbin/nginx
+ngx_conf_dir = $(NGINXDIR)conf/
+tmp_dir = /home/$(USER)/ngx-$(shell date +%s)
+ 
+ifdef PRIVATEKEY
+sshflags = -i $(PRIVATEKEY)
+endif
+ 
+rsyncflags = -e "ssh $(sshflags) $(PRIVATEKEY)" --checksum -rlvzu --exclude ".*" --exclude "*.tgz*" --exclude "Makefile"
+ 
+ 
+all:
+@echo "use any of the targets: start, stop, pull, push, sync, deploy, watch"
+ 
+start:
+@echo "starting Nginx"
+ssh -i $(PRIVATEKEY) $(USER)@$(REMOTE) 'sudo $(ngx_bin) -c $(REMOTEDIR)$(NGXCONF)'
+ 
+stop:
+@echo "stopping Nginx"
+ssh -i $(PRIVATEKEY) $(USER)@$(REMOTE) 'sudo $(ngx_bin) -c $(REMOTEDIR)$(NGXCONF) -s stop'
+ 
+pull:
+rsync --update $(rsyncflags) $(USER)@$(REMOTE):$(REMOTEDIR)/ .
+ 
+push:
+rsync $(rsyncflags) . $(USER)@$(REMOTE):$(REMOTEDIR)/
+ 
+# synchronize with remote
+sync: pull push
+ 
+# push changes to remote and start Nginx with the config file specified by NGXCONF
+deploy: push
+ssh $(sshflags) $(PRIVATEKEY) $(USER)@$(REMOTE) 'sudo $(ngx_bin) -c $(REMOTEDIR)$(NGXCONF)'
+ 
+# like deploy but when the remote Nginx is already running
+redeploy: push
+ssh $(sshflags) $(PRIVATEKEY) $(USER)@$(REMOTE) 'sudo $(ngx_bin) -c $(REMOTEDIR)$(NGXCONF) -s reload'
+ 
+# watch local directory and push changes
+# requires watchman -- https://github.com/facebook/watchman
+watch:
+@echo "Watching for changes in *.conf and *.lua files"
+watchman watch $(shell pwd) -f --persistent --server-encoding=json
+watchman -- trigger $(shell pwd) remake '*.conf' '*.lua' -- make push
+ 
+.PHONY: watch deploy redeploy start stop push pull sync
+{% endhighlight %}
