@@ -2,7 +2,7 @@
 <!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]--> 
 <html class="no-js" lang="en"> 
   <head>
-    <title>Makefile for working with a remote Nginx | 3scale Documentation</title>
+    <title>Error 404 and report if app plan doesn't match | 3scale Documentation</title>
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -145,75 +145,72 @@
                 
               </div>
             </section>               
-            <h1>Makefile for working with a remote Nginx</h1>
+            <h1>Error 404 and report if app plan doesn't match</h1>
 <dl>
-  <dt>Author:</dt>
-    <dd>Victor Delgado</dd>
-  <dt>Version:</dt>
-    <dd>1.0</dd>
-  <dt>Language:</dt>
-    <dd>Makefile</dd>
+	<dt>Author:</dt>
+		<dd>Victor Delgado</dd>
+	<dt>Version:</dt>
+		<dd>1.0</dd>
+	<dt>Language:</dt>
+		<dd>Lua&Nginx Config</dd>
 </dl>
 <p><strong>Description:</strong> First of all, some of the money will go directly to the speakers to compensate their costs to come to Barcelona and give some great talks. If that's not convincing enough, we'll serve you refreshments, have two coffee breaks and a lunch break. And we're not talking conference food, but a Mediterranean-style menu, tapas, sandwiches and other snacks prepared by awesome local chefs.</p>
 
-<div class="highlight"><pre><code class="language-basemake" data-lang="basemake"><span class="lineno"> 1</span> <span class="c">#### SETTINGS</span>
-<span class="lineno"> 2</span> <span class="nv">NGINXDIR</span> <span class="o">=</span> /usr/local/openresty/nginx/
-<span class="lineno"> 3</span> <span class="nv">NGXCONF</span> <span class="o">=</span> nginx_dummycustomer.conf
-<span class="lineno"> 4</span> <span class="nv">USER</span> <span class="o">=</span> ubuntu
-<span class="lineno"> 5</span> <span class="nv">REMOTE</span> <span class="o">=</span> ec2-54-224-138-186.compute-1.amazonaws.com
-<span class="lineno"> 6</span> <span class="nv">REMOTEDIR</span> <span class="o">=</span> /home/<span class="k">$(</span>USER<span class="k">)</span>/dummycustomer/
-<span class="lineno"> 7</span> <span class="nv">PRIVATEKEY</span> <span class="o">=</span> /Users/victordg/.ssh/aws/vdg-3scale.pem
-<span class="lineno"> 8</span> <span class="c">####</span>
-<span class="lineno"> 9</span>  
-<span class="lineno">10</span>  
-<span class="lineno">11</span> <span class="nv">ngx_files</span> <span class="o">=</span> <span class="k">$(</span>shell find . -name <span class="s1">&#39;*.lua&#39;</span> -o -name <span class="s1">&#39;*.conf&#39;</span><span class="k">)</span>
-<span class="lineno">12</span> <span class="nv">ngx_bin</span> <span class="o">=</span> <span class="k">$(</span>NGINXDIR<span class="k">)</span>sbin/nginx
-<span class="lineno">13</span> <span class="nv">ngx_conf_dir</span> <span class="o">=</span> <span class="k">$(</span>NGINXDIR<span class="k">)</span>conf/
-<span class="lineno">14</span> <span class="nv">tmp_dir</span> <span class="o">=</span> /home/<span class="k">$(</span>USER<span class="k">)</span>/ngx-<span class="k">$(</span>shell date +%s<span class="k">)</span>
-<span class="lineno">15</span>  
-<span class="lineno">16</span> <span class="err">ifdef</span> <span class="err">PRIVATEKEY</span>
-<span class="lineno">17</span> <span class="nv">sshflags</span> <span class="o">=</span> -i <span class="k">$(</span>PRIVATEKEY<span class="k">)</span>
-<span class="lineno">18</span> <span class="err">endif</span>
-<span class="lineno">19</span>  
-<span class="lineno">20</span> <span class="nv">rsyncflags</span> <span class="o">=</span> -e <span class="s2">&quot;ssh $(sshflags) $(PRIVATEKEY)&quot;</span> --checksum -rlvzu --exclude <span class="s2">&quot;.*&quot;</span> --exclude <span class="s2">&quot;*.tgz*&quot;</span> --exclude <span class="s2">&quot;Makefile&quot;</span>
-<span class="lineno">21</span>  
+<h3>nginx.conf</h3>
+<div class="highlight"><pre><code class="language-nginx" data-lang="nginx"><span class="lineno">1</span> <span class="k">location</span> <span class="p">=</span> <span class="s">/threescale_report</span> <span class="p">{</span>
+<span class="lineno">2</span> <span class="kn">internal</span><span class="p">;</span>
+<span class="lineno">3</span> <span class="kn">set</span> <span class="nv">$provider_key</span> <span class="s">&quot;PROVIDERKEY&quot;</span><span class="p">;</span>
+<span class="lineno">4</span>  
+<span class="lineno">5</span> <span class="kn">proxy_pass</span> <span class="s">http://threescale_backend/transactions.xml</span><span class="p">;</span>
+<span class="lineno">6</span> <span class="kn">proxy_set_header</span> <span class="s">Host</span> <span class="s">&quot;su1.3scale.net&quot;</span><span class="p">;</span>
+<span class="lineno">7</span> <span class="p">}</span></code></pre></div>
+
+<h3>nginx.lua</h3>
+<div class="highlight"><pre><code class="language-lua" data-lang="lua"><span class="lineno"> 1</span> <span class="c1">--------------------------------------</span>
+<span class="lineno"> 2</span> <span class="c1">-- authrep ---------------------------</span>
+<span class="lineno"> 3</span> <span class="c1">--------------------------------------</span>
+<span class="lineno"> 4</span> <span class="k">function</span> <span class="nf">authrep</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">service</span><span class="p">)</span>
+<span class="lineno"> 5</span> <span class="n">ngx</span><span class="p">.</span><span class="n">var</span><span class="p">.</span><span class="n">cached_key</span> <span class="o">=</span> <span class="n">ngx</span><span class="p">.</span><span class="n">var</span><span class="p">.</span><span class="n">cached_key</span> <span class="o">..</span> <span class="s2">&quot;</span><span class="s">:&quot;</span> <span class="o">..</span> <span class="n">ngx</span><span class="p">.</span><span class="n">var</span><span class="p">.</span><span class="n">usage</span>
+<span class="lineno"> 6</span> <span class="kd">local</span> <span class="n">api_keys</span> <span class="o">=</span> <span class="n">ngx</span><span class="p">.</span><span class="n">shared</span><span class="p">.</span><span class="n">api_keys</span>
+<span class="lineno"> 7</span> <span class="kd">local</span> <span class="n">is_known</span> <span class="o">=</span> <span class="n">api_keys</span><span class="p">:</span><span class="n">get</span><span class="p">(</span><span class="n">ngx</span><span class="p">.</span><span class="n">var</span><span class="p">.</span><span class="n">cached_key</span><span class="p">)</span>
+<span class="lineno"> 8</span>  
+<span class="lineno"> 9</span> <span class="k">if</span> <span class="n">is_known</span> <span class="o">~=</span> <span class="mi">200</span> <span class="k">then</span>
+<span class="lineno">10</span> <span class="kd">local</span> <span class="n">res</span> <span class="o">=</span> <span class="n">ngx</span><span class="p">.</span><span class="n">location</span><span class="p">.</span><span class="n">capture</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">/threescale_authrep&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="n">share_all_vars</span> <span class="o">=</span> <span class="kc">true</span> <span class="p">})</span>
+<span class="lineno">11</span>  
+<span class="lineno">12</span> <span class="c1">-- IN HERE YOU DEFINE THE ERROR IF CREDENTIALS ARE PASSED, BUT THEY ARE NOT VALID</span>
+<span class="lineno">13</span> <span class="k">if</span> <span class="n">res</span><span class="p">.</span><span class="n">status</span> <span class="o">~=</span> <span class="mi">200</span> <span class="k">then</span>
+<span class="lineno">14</span> <span class="c1">-- remove the key, if it&#39;s not 200 let&#39;s go the slow route, to 3scale&#39;s backend</span>
+<span class="lineno">15</span> <span class="n">api_keys</span><span class="p">:</span><span class="n">delete</span><span class="p">(</span><span class="n">ngx</span><span class="p">.</span><span class="n">var</span><span class="p">.</span><span class="n">cached_key</span><span class="p">)</span>
+<span class="lineno">16</span> <span class="n">ngx</span><span class="p">.</span><span class="n">status</span> <span class="o">=</span> <span class="n">res</span><span class="p">.</span><span class="n">status</span>
+<span class="lineno">17</span> <span class="n">ngx</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">content_type</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="s">application/json&quot;</span>
+<span class="lineno">18</span> <span class="n">error_authorization_failed</span><span class="p">(</span><span class="n">service</span><span class="p">)</span>
+<span class="lineno">19</span> <span class="k">else</span>
+<span class="lineno">20</span> <span class="c1">-- check for application plan in authrep response</span>
+<span class="lineno">21</span> <span class="kd">local</span> <span class="n">qa_plan</span> <span class="o">=</span> <span class="n">ngx</span><span class="p">.</span><span class="n">re</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">res</span><span class="p">.</span><span class="n">body</span><span class="p">,</span><span class="s">[=[&lt;plan&gt;.+QA]=]</span><span class="p">)</span>
 <span class="lineno">22</span>  
-<span class="lineno">23</span> <span class="nf">all</span><span class="o">:</span>
-<span class="lineno">24</span> <span class="nf">@echo &quot;use any of the targets</span><span class="o">:</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">pull</span><span class="p">,</span> <span class="n">push</span><span class="p">,</span> <span class="n">sync</span><span class="p">,</span> <span class="n">deploy</span><span class="p">,</span> <span class="n">watch</span>&quot;
-<span class="lineno">25</span>  
-<span class="lineno">26</span> <span class="nf">start</span><span class="o">:</span>
-<span class="lineno">27</span> <span class="err">@echo</span> <span class="s2">&quot;starting Nginx&quot;</span>
-<span class="lineno">28</span> <span class="err">ssh</span> <span class="err">-i</span> <span class="k">$(</span><span class="nv">PRIVATEKEY</span><span class="k">)</span> <span class="k">$(</span><span class="nv">USER</span><span class="k">)</span><span class="err">@</span><span class="k">$(</span><span class="nv">REMOTE</span><span class="k">)</span> <span class="s1">&#39;sudo $(ngx_bin) -c $(REMOTEDIR)$(NGXCONF)&#39;</span>
-<span class="lineno">29</span>  
-<span class="lineno">30</span> <span class="nf">stop</span><span class="o">:</span>
-<span class="lineno">31</span> <span class="err">@echo</span> <span class="s2">&quot;stopping Nginx&quot;</span>
-<span class="lineno">32</span> <span class="err">ssh</span> <span class="err">-i</span> <span class="k">$(</span><span class="nv">PRIVATEKEY</span><span class="k">)</span> <span class="k">$(</span><span class="nv">USER</span><span class="k">)</span><span class="err">@</span><span class="k">$(</span><span class="nv">REMOTE</span><span class="k">)</span> <span class="s1">&#39;sudo $(ngx_bin) -c $(REMOTEDIR)$(NGXCONF) -s stop&#39;</span>
-<span class="lineno">33</span>  
-<span class="lineno">34</span> <span class="nf">pull</span><span class="o">:</span>
-<span class="lineno">35</span> <span class="nf">rsync --update $(rsyncflags) $(USER)@$(REMOTE)</span><span class="o">:</span><span class="k">$(</span><span class="nv">REMOTEDIR</span><span class="k">)</span>/ .
-<span class="lineno">36</span>  
-<span class="lineno">37</span> <span class="nf">push</span><span class="o">:</span>
-<span class="lineno">38</span> <span class="nf">rsync $(rsyncflags) . $(USER)@$(REMOTE)</span><span class="o">:</span><span class="k">$(</span><span class="nv">REMOTEDIR</span><span class="k">)</span>/
-<span class="lineno">39</span>  
-<span class="lineno">40</span> <span class="c"># synchronize with remote</span>
-<span class="lineno">41</span> <span class="nf">sync</span><span class="o">:</span> <span class="n">pull</span> <span class="n">push</span>
-<span class="lineno">42</span>  
-<span class="lineno">43</span> <span class="c"># push changes to remote and start Nginx with the config file specified by NGXCONF</span>
-<span class="lineno">44</span> <span class="nf">deploy</span><span class="o">:</span> <span class="n">push</span>
-<span class="lineno">45</span> <span class="err">ssh</span> <span class="k">$(</span><span class="nv">sshflags</span><span class="k">)</span> <span class="k">$(</span><span class="nv">PRIVATEKEY</span><span class="k">)</span> <span class="k">$(</span><span class="nv">USER</span><span class="k">)</span><span class="err">@</span><span class="k">$(</span><span class="nv">REMOTE</span><span class="k">)</span> <span class="s1">&#39;sudo $(ngx_bin) -c $(REMOTEDIR)$(NGXCONF)&#39;</span>
-<span class="lineno">46</span>  
-<span class="lineno">47</span> <span class="c"># like deploy but when the remote Nginx is already running</span>
-<span class="lineno">48</span> <span class="nf">redeploy</span><span class="o">:</span> <span class="n">push</span>
-<span class="lineno">49</span> <span class="err">ssh</span> <span class="k">$(</span><span class="nv">sshflags</span><span class="k">)</span> <span class="k">$(</span><span class="nv">PRIVATEKEY</span><span class="k">)</span> <span class="k">$(</span><span class="nv">USER</span><span class="k">)</span><span class="err">@</span><span class="k">$(</span><span class="nv">REMOTE</span><span class="k">)</span> <span class="s1">&#39;sudo $(ngx_bin) -c $(REMOTEDIR)$(NGXCONF) -s reload&#39;</span>
-<span class="lineno">50</span>  
-<span class="lineno">51</span> <span class="c"># watch local directory and push changes</span>
-<span class="lineno">52</span> <span class="c"># requires watchman -- https://github.com/facebook/watchman</span>
-<span class="lineno">53</span> <span class="nf">watch</span><span class="o">:</span>
-<span class="lineno">54</span> <span class="err">@echo</span> <span class="s2">&quot;Watching for changes in *.conf and *.lua files&quot;</span>
-<span class="lineno">55</span> <span class="err">watchman</span> <span class="err">watch</span> <span class="k">$(</span><span class="nv">shell</span> <span class="nv">pwd</span><span class="k">)</span> <span class="err">-f</span> <span class="err">--persistent</span> <span class="nv">--server-encoding</span><span class="o">=</span>json
-<span class="lineno">56</span> <span class="err">watchman</span> <span class="err">--</span> <span class="err">trigger</span> <span class="k">$(</span><span class="nv">shell</span> <span class="nv">pwd</span><span class="k">)</span> <span class="err">remake</span> <span class="s1">&#39;*.conf&#39;</span> <span class="s1">&#39;*.lua&#39;</span> <span class="err">--</span> <span class="err">make</span> <span class="err">push</span>
-<span class="lineno">57</span>  
-<span class="lineno">58</span> <span class="nf">.PHONY</span><span class="o">:</span> <span class="n">watch</span> <span class="n">deploy</span> <span class="n">redeploy</span> <span class="n">start</span> <span class="n">stop</span> <span class="n">push</span> <span class="n">pull</span> <span class="n">sync</span></code></pre></div>                      
+<span class="lineno">23</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">qa_plan</span> <span class="k">then</span>
+<span class="lineno">24</span> <span class="c1">-- if application plan is not &quot;Sandbox&quot; report</span>
+<span class="lineno">25</span> <span class="c1">-- to 3scale and return 404 error to the client</span>
+<span class="lineno">26</span> <span class="kd">local</span> <span class="n">transaction</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="s">transactions[0][app_id]=&quot;</span> <span class="o">..</span> <span class="n">params</span><span class="p">.</span><span class="n">app_id</span> <span class="o">..</span>
+<span class="lineno">27</span> <span class="s2">&quot;</span><span class="s">&amp;transactions[0][usage][hits]=1&quot;</span>
+<span class="lineno">28</span>  
+<span class="lineno">29</span> <span class="kd">local</span> <span class="n">report_body</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="s">provider_key=&quot;</span> <span class="o">..</span> <span class="n">ngx</span><span class="p">.</span><span class="n">var</span><span class="p">.</span><span class="n">provider_key</span> <span class="o">..</span>
+<span class="lineno">30</span> <span class="s2">&quot;</span><span class="s">&amp;service_id=&quot;</span> <span class="o">..</span> <span class="n">ngx</span><span class="p">.</span><span class="n">var</span><span class="p">.</span><span class="n">service_id</span> <span class="o">..</span>
+<span class="lineno">31</span> <span class="s2">&quot;</span><span class="s">&amp;transactions=&quot;</span> <span class="o">..</span> <span class="n">transaction</span>
+<span class="lineno">32</span>  
+<span class="lineno">33</span> <span class="n">ngx</span><span class="p">.</span><span class="n">location</span><span class="p">.</span><span class="n">capture</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">/threescale_report&quot;</span><span class="p">,</span> <span class="p">{</span>
+<span class="lineno">34</span> <span class="n">method</span> <span class="o">=</span> <span class="n">ngx</span><span class="p">.</span><span class="n">HTTP_POST</span><span class="p">,</span>
+<span class="lineno">35</span> <span class="n">body</span> <span class="o">=</span> <span class="n">report_body</span><span class="p">,</span>
+<span class="lineno">36</span> <span class="n">share_all_vars</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="lineno">37</span> <span class="p">})</span>
+<span class="lineno">38</span> <span class="n">error_no_match</span><span class="p">(</span><span class="n">service</span><span class="p">)</span>
+<span class="lineno">39</span> <span class="k">end</span>
+<span class="lineno">40</span>  
+<span class="lineno">41</span> <span class="n">api_keys</span><span class="p">:</span><span class="n">set</span><span class="p">(</span><span class="n">ngx</span><span class="p">.</span><span class="n">var</span><span class="p">.</span><span class="n">cached_key</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
+<span class="lineno">42</span> <span class="k">end</span>
+<span class="lineno">43</span> <span class="n">ngx</span><span class="p">.</span><span class="n">var</span><span class="p">.</span><span class="n">cached_key</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="lineno">44</span> <span class="k">end</span>
+<span class="lineno">45</span> <span class="k">end</span></code></pre></div>                      
           </div>
         </div>
       </div>

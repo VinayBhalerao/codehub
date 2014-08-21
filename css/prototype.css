@@ -480,6 +480,9 @@ h1 a i, .menu a i {
 .bs-callout-info .fa, .leadquote .fa {
   color: #5bc0de;
 }
+.multi {
+  text-transform: capitalize;
+}
 
 /* line 384, ../sass/prototype.scss */
 .multi .fa {
@@ -681,4 +684,10 @@ a .side-box {
 .main-table, .main-table td, .main-table th {
     border: 1px solid #999;
     border-collapse: collapse;
+}
+.post-link {
+  margin-right: 10px;
+}
+.badge {
+  margin: 0 2px;
 }

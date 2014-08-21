@@ -5,8 +5,8 @@
     <description>3scale Code Hub snippet library</description>
     <link>http://codehub.3scale.net/</link>
     <atom:link href="http://codehub.3scale.net/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 20 Aug 2014 18:28:22 +0200</pubDate>
-    <lastBuildDate>Wed, 20 Aug 2014 18:28:22 +0200</lastBuildDate>
+    <pubDate>Thu, 21 Aug 2014 16:41:15 +0200</pubDate>
+    <lastBuildDate>Thu, 21 Aug 2014 16:41:15 +0200</lastBuildDate>
     <generator>Jekyll v2.2.0</generator>
     
       <item>
@@ -59,13 +59,13 @@
 &lt;span class=&quot;lineno&quot;&gt;35&lt;/span&gt; 
 &lt;span class=&quot;lineno&quot;&gt;36&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         <pubDate>Wed, 20 Aug 2014 00:00:00 +0200</pubDate>
-        <link>http://codehub.3scale.net/nginx,/lua,/caching/2014/08/20/UsePrebuiltCache/</link>
-        <guid isPermaLink="true">http://codehub.3scale.net/nginx,/lua,/caching/2014/08/20/UsePrebuiltCache/</guid>
+        <link>http://codehub.3scale.net/nginx/lua/caching/2014/08/20/UsePrebuiltCache/</link>
+        <guid isPermaLink="true">http://codehub.3scale.net/nginx/lua/caching/2014/08/20/UsePrebuiltCache/</guid>
         
         
-        <category>nginx,</category>
+        <category>nginx</category>
         
-        <category>lua,</category>
+        <category>lua</category>
         
         <category>caching</category>
         
@@ -101,15 +101,15 @@
 &lt;span class=&quot;lineno&quot;&gt;15&lt;/span&gt; 	&lt;span class=&quot;nt&quot;&gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
 &lt;span class=&quot;lineno&quot;&gt;16&lt;/span&gt; {% endif%}&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         <pubDate>Wed, 20 Aug 2014 00:00:00 +0200</pubDate>
-        <link>http://codehub.3scale.net/html,/liquid,/javascript,/developerportal/2014/08/20/RedirectToExternalLogin/</link>
-        <guid isPermaLink="true">http://codehub.3scale.net/html,/liquid,/javascript,/developerportal/2014/08/20/RedirectToExternalLogin/</guid>
+        <link>http://codehub.3scale.net/html/liquid/js/developerportal/2014/08/20/RedirectToExternalLogin/</link>
+        <guid isPermaLink="true">http://codehub.3scale.net/html/liquid/js/developerportal/2014/08/20/RedirectToExternalLogin/</guid>
         
         
-        <category>html,</category>
+        <category>html</category>
         
-        <category>liquid,</category>
+        <category>liquid</category>
         
-        <category>javascript,</category>
+        <category>js</category>
         
         <category>developerportal</category>
         
@@ -148,11 +148,11 @@
 &lt;span class=&quot;lineno&quot;&gt;18&lt;/span&gt; 	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;span class=&quot;lineno&quot;&gt;19&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         <pubDate>Wed, 20 Aug 2014 00:00:00 +0200</pubDate>
-        <link>http://codehub.3scale.net/varnish,/reporting/2014/08/20/%20VCLReportErrorCode/</link>
-        <guid isPermaLink="true">http://codehub.3scale.net/varnish,/reporting/2014/08/20/%20VCLReportErrorCode/</guid>
+        <link>http://codehub.3scale.net/varnish/reporting/2014/08/20/%20VCLReportErrorCode/</link>
+        <guid isPermaLink="true">http://codehub.3scale.net/varnish/reporting/2014/08/20/%20VCLReportErrorCode/</guid>
         
         
-        <category>varnish,</category>
+        <category>varnish</category>
         
         <category>reporting</category>
         
@@ -458,13 +458,13 @@
 &lt;span class=&quot;lineno&quot;&gt;44&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;span class=&quot;lineno&quot;&gt;45&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         <pubDate>Thu, 14 Aug 2014 00:00:00 +0200</pubDate>
-        <link>http://codehub.3scale.net/nginx,/lua,/reporting/2014/08/14/Error404andReportIfAppPlanNoMatch/</link>
-        <guid isPermaLink="true">http://codehub.3scale.net/nginx,/lua,/reporting/2014/08/14/Error404andReportIfAppPlanNoMatch/</guid>
+        <link>http://codehub.3scale.net/nginx/lua/reporting/2014/08/14/Error404andReportIfAppPlanNoMatch/</link>
+        <guid isPermaLink="true">http://codehub.3scale.net/nginx/lua/reporting/2014/08/14/Error404andReportIfAppPlanNoMatch/</guid>
         
         
-        <category>nginx,</category>
+        <category>nginx</category>
         
-        <category>lua,</category>
+        <category>lua</category>
         
         <category>reporting</category>
         
@@ -508,13 +508,13 @@
 &lt;span class=&quot;lineno&quot;&gt;23&lt;/span&gt; 	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;first_values&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;lineno&quot;&gt;24&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
         <pubDate>Mon, 11 Aug 2014 00:00:00 +0200</pubDate>
-        <link>http://codehub.3scale.net/nginx,/lua,/authentication/2014/08/11/ExtractingBasicAuthtoken/</link>
-        <guid isPermaLink="true">http://codehub.3scale.net/nginx,/lua,/authentication/2014/08/11/ExtractingBasicAuthtoken/</guid>
+        <link>http://codehub.3scale.net/nginx/lua/authentication/2014/08/11/ExtractingBasicAuthtoken/</link>
+        <guid isPermaLink="true">http://codehub.3scale.net/nginx/lua/authentication/2014/08/11/ExtractingBasicAuthtoken/</guid>
         
         
-        <category>nginx,</category>
+        <category>nginx</category>
         
-        <category>lua,</category>
+        <category>lua</category>
         
         <category>authentication</category>
         

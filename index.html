@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Code Hub
+exclude_from_search: true
 ---
 
 <div class="home">
@@ -11,7 +12,7 @@ title: Code Hub
     {% for post in site.posts %}
       <li>
         <span class="post-date">{{ post.date | date: "%b %-d, %Y" }}</span>
-        <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+        <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>{% for category in post.categories %}<a class="badge" href="/{{category}}">{{category}}</a>{% endfor %}
       </li>
     {% endfor %}
   </ul>
