@@ -180,8 +180,7 @@ h1 a i, .menu a i {
 }
 /* line 140, ../sass/prototype.scss */
 #search .head-butt {
-  border-right: 1px solid #357ebd;
-  font-size: 1.2em;
+  border-right: 1px solid #2C2C2C;
 }
 
 /* line 146, ../sass/prototype.scss */
@@ -283,7 +282,7 @@ h1 a i, .menu a i {
 
 /* line 215, ../sass/prototype.scss */
 .fixed-header .col-md-4 > .row > .head-butt:nth-child(1) {
-  border-left: none;
+  /*border-left: none;*/
 }
 
 /* line 219, ../sass/prototype.scss */
@@ -690,4 +689,7 @@ a .side-box {
 }
 .badge {
   margin: 0 2px;
+}
+form.col-md-10 {
+  padding: 0;
 }

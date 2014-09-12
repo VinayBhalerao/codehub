@@ -33,9 +33,10 @@
           </div>
           <div class="col-md-6">
             <div class="row" id="search">
-              <form action="/search" method="get">
+              <form action="/search" method="get" class="col-md-10">
                 <input class="text" name="q" type="text" id="search-query" title="Search the site" placeholder="Search" autocomplete="off" >
               </form>
+              <div class="col-md-2 head-butt"><a class="btn btn-default" href="#"><i class="fa fa-code"></i>CodeHub</a></div>
             </div>
           </div>
           <div class="col-md-4">
@@ -128,6 +129,7 @@
       <div class="col-md-10 col-sm-9 col-xs-8">
         <div class="row">
           <div class="col-lg-10 col-md-11 col-sm-12">
+            
             <section id="search-results" style="display: none;">
               <h2>Search results</h2>
               <div class="entries">
@@ -144,8 +146,9 @@
                 </script>
                 
               </div>
-            </section>               
-            <h1>Openresty init.d script</h1>
+            </section>
+            <section id="page-content">        
+              <h1>Openresty init.d script</h1>
 <dl>
 	<dt>Author:</dt>
 		<dd>Victor Delgado</dd>
@@ -284,7 +287,8 @@
 <span class="lineno">126</span> <span class="p">;;</span>
 <span class="lineno">127</span> <span class="k">esac</span>
 <span class="lineno">128</span>  
-<span class="lineno">129</span> <span class="nb">exit </span>0</code></pre></div>                      
+<span class="lineno">129</span> <span class="nb">exit </span>0</code></pre></div>       
+            </section>                  
           </div>
         </div>
       </div>
@@ -378,6 +382,13 @@
         return false;
       }
       $(this).val() ? $("#search-results").hide() : $("#search-results").show();
+    });
+    $("#search-query").keyup(function() {
+      if ($(this).val() ) {
+        $("#page-content").css("display", "none");
+      } else {
+        $("#page-content").css("display", "block");
+      }
     });
   });
   </script> 
