@@ -5,8 +5,8 @@
     <description>3scale Code Hub snippet library</description>
     <link>http://codehub.3scale.net/</link>
     <atom:link href="http://codehub.3scale.net/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Fri, 12 Sep 2014 17:13:40 +0200</pubDate>
-    <lastBuildDate>Fri, 12 Sep 2014 17:13:40 +0200</lastBuildDate>
+    <pubDate>Fri, 12 Sep 2014 17:30:25 +0200</pubDate>
+    <lastBuildDate>Fri, 12 Sep 2014 17:30:25 +0200</lastBuildDate>
     <generator>Jekyll v2.2.0</generator>
     
       <item>
@@ -532,24 +532,6 @@
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;
-
-&lt;!-- DISQUS --&gt;
-
-	&lt;div id=&quot;disqus_thread&quot;&gt;&lt;/div&gt;
-	&lt;script type=&quot;text/javascript&quot;&gt;
-	    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-	    var disqus_shortname = &#39;testandrzej&#39;; // required: replace example with your forum shortname
-
-	    /* * * DON&#39;T EDIT BELOW THIS LINE * * */
-	    (function() {
-	        var dsq = document.createElement(&#39;script&#39;); dsq.type = &#39;text/javascript&#39;; dsq.async = true;
-	        dsq.src = &#39;//&#39; + disqus_shortname + &#39;.disqus.com/embed.js&#39;;
-	        (document.getElementsByTagName(&#39;head&#39;)[0] || document.getElementsByTagName(&#39;body&#39;)[0]).appendChild(dsq);
-	    })();
-	&lt;/script&gt;
-	&lt;noscript&gt;Please enable JavaScript to view the &lt;a href=&quot;http://disqus.com/?ref_noscript&quot;&gt;comments powered by Disqus.&lt;/a&gt;&lt;/noscript&gt;
-	&lt;a href=&quot;http://disqus.com&quot; class=&quot;dsq-brlink&quot;&gt;comments powered by &lt;span class=&quot;logo-disqus&quot;&gt;Disqus&lt;/span&gt;&lt;/a&gt;
-
 </description>
         <pubDate>Mon, 11 Aug 2014 00:00:00 +0200</pubDate>
         <link>http://codehub.3scale.net/nginx/lua/authentication/2014/08/11/ExtractingBasicAuthtoken/</link>
