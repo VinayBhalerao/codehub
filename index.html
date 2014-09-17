@@ -8,14 +8,21 @@ exclude_from_search: true
 
   <h1>Snippets</h1>
 
-  <ul class="posts">
+  <!--<ul class="posts">
     {% for post in site.posts %}
       <li>
         <span class="post-date">{{ post.date | date: "%b %-d, %Y" }}</span>
         <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>{% for category in post.categories %}<a class="badge" href="/{{category}}">{{category}}</a>{% endfor %}
       </li>
     {% endfor %}
-  </ul>
+  </ul>-->
+
+  {% for post in site.posts %}
+      <div class="land-box">
+        {% for category in post.categories %}<a class="badge">{{category}}</a>{% endfor %}
+        <h2>{{ post.title }}</h2>
+      </div>
+  {% endfor %}
 
   <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
 

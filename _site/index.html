@@ -152,7 +152,7 @@
 
   <h1>Snippets</h1>
 
-  <ul class="posts">
+  <!--<ul class="posts">
     
       <li>
         <span class="post-date">Aug 20, 2014</span>
@@ -189,7 +189,44 @@
         <a class="post-link" href="/nginx/lua/authentication/2014/08/11/ExtractingBasicAuthtoken/">Basic HTTP Auth with user_key</a><a class="badge" href="/nginx">nginx</a><a class="badge" href="/lua">lua</a><a class="badge" href="/authentication">authentication</a>
       </li>
     
-  </ul>
+  </ul>-->
+
+  
+      <div class="land-box">
+        <a class="badge">nginx</a><a class="badge">lua</a><a class="badge">caching</a>
+        <h2>Use pre-built cache in case 3scale cannot be reached</h2>
+      </div>
+  
+      <div class="land-box">
+        <a class="badge">html</a><a class="badge">liquid</a><a class="badge">js</a><a class="badge">developerportal</a>
+        <h2>Redirect to external login</h2>
+      </div>
+  
+      <div class="land-box">
+        <a class="badge">varnish</a><a class="badge">reporting</a>
+        <h2>VCL report error code</h2>
+      </div>
+  
+      <div class="land-box">
+        <a class="badge">nginx</a>
+        <h2>Makefile for working with a remote Nginx</h2>
+      </div>
+  
+      <div class="land-box">
+        <a class="badge">nginx</a>
+        <h2>Openresty init.d script</h2>
+      </div>
+  
+      <div class="land-box">
+        <a class="badge">nginx</a><a class="badge">lua</a><a class="badge">reporting</a>
+        <h2>Error 404 and report if app plan doesn't match</h2>
+      </div>
+  
+      <div class="land-box">
+        <a class="badge">nginx</a><a class="badge">lua</a><a class="badge">authentication</a>
+        <h2>Basic HTTP Auth with user_key</h2>
+      </div>
+  
 
   <p class="rss-subscribe">subscribe <a href="/feed.xml">via RSS</a></p>
 
@@ -308,6 +345,7 @@
             $(this).parent().addClass('active');
         });
       });
+      $(".land-box").wrap("<a href=''></a>");
     </script>
   </body>
 </html>

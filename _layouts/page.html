@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]--> 
 <html class="no-js" lang="en"> 
   <head>
@@ -16,7 +16,7 @@
   
 
     <script type="text/javascript" src="/javascript/modernizr.js"></script>
-    <!--<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>-->
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
     
   </head>
 
@@ -32,11 +32,14 @@
 " src="https://support.3scale.net/images/3scale-logo-transparent.png"><span style="color: white; position: absolute; font-variant: small-caps; font-family: Verdana; right: 0px; bottom: -24px;">Docs</span></a>
           </div>
           <div class="col-md-6">
-            <div class="row" id="search">
-              <form action="/search" method="get" class="col-md-10">
-                <input class="text" name="q" type="text" id="search-query" title="Search the site" placeholder="Search" autocomplete="off" >
+            <div class="row">
+              <form action="/search" method="get" id="search">
+                <div class="col-xs-10 search"><input class="text" name="q" type="text" id="searchAgainBox" title="Search the site" placeholder="Search" ></div>
+                <div class="col-xs-2 head-butt">
+                  <a class="btn btn-primary"><i class="fa fa-search"></i></a>
+
+                </div>
               </form>
-              <div class="col-md-2 head-butt"><a class="btn btn-default" href="/"><i class="fa fa-code"></i>CodeHub</a></div>
             </div>
           </div>
           <div class="col-md-4">
@@ -56,45 +59,8 @@
       </div>
       <div class="col-md-10 col-sm-9 col-xs-8">
         <div class="row">
-          <div class="col-lg-10 col-md-11 col-sm-12">
-            
-            <section id="search-results" style="display: none;">
-              <h2>Search results</h2>
-              <div class="entries">
-                {% raw %}
-                <script id="search-results-template" type="text/mustache">
-                  {{#entries}}
-                    <article>
-                      <p>
-                        {{#date}}<small><time datetime="{{pubdate}}" pubdate>{{displaydate}}</time></small>{{/date}}
-                        <a href="{{url}}">{{title}}</a>
-                      </p>
-                    </article>
-                  {{/entries}}
-                </script>
-                {% endraw %}
-              </div>
-            </section>
-            <section id="page-content">        
-              {{ content }}       
-            </section> 
-            <!-- DISQUS -->
-            {% if page.comments %}
-              <div id="disqus_thread"></div>
-              <script type="text/javascript">
-                  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-                  var disqus_shortname = 'testandrzej'; // required: replace example with your forum shortname
-
-                  /* * * DON'T EDIT BELOW THIS LINE * * */
-                  (function() {
-                      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-                  })();
-              </script>
-              <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-              <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
-            {% endif %}                
+          <div class="col-lg-10 col-md-11 col-sm-12">                      
+            {{ content }}                      
           </div>
         </div>
       </div>
@@ -104,12 +70,10 @@
     <!-- JS and analytics only. -->
 
     <!--<script src="/javascripts/bootstrap.min.js"></script>-->
-    <script src="/javascript/search.min.js" type="text/javascript" charset="utf-8"></script>
-    <script type="text/javascript" src="/javascript/jquery-ui-1.9.1.custom.min.js"></script>
-    <!--<script type="text/javascript" src="/javascript/baseline.js"></script>
-    <script type="text/javascript" src="/javascript/3scale.js"></script>-->
-    <script type="text/javascript" src="/javascript/excanvas.compiled.js"></script>
-    
+    <script type="text/javascript" src="/javascripts/jquery-ui-1.9.1.custom.min.js"></script>
+    <script type="text/javascript" src="/javascripts/baseline.js"></script>
+    <script type="text/javascript" src="/javascripts/3scale.js"></script>
+    <script type="text/javascript" src="/javascripts/excanvas.compiled.js"></script>
     <!--[if lt IE 9]>
       <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.6/html5shiv.min.js"></script>
       <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.3.0/respond.min.js"></script>
@@ -171,41 +135,10 @@
       });
 
     });
-    /*$('.document-content img').baseline(30);
+    $('.document-content img').baseline(30);
     $('#search a').click(function(e) {
       $("#search").submit();
-    });*/
-  $(function() {
-    $('#search-query').lunrSearch({
-      indexUrl: '/search.json',             // URL of the `search.json` index data for your site
-      results:  '#search-results',          // jQuery selector for the search results container
-      entries:  '.entries',                 // jQuery selector for the element to contain the results list, must be a child of the results element above.
-      template: '#search-results-template'  // jQuery selector for the Mustache.js template
     });
-    $("#search-query").keydown(function(event) {
-      if(event.keyCode == 13) {
-        event.preventDefault();
-        return false;
-      }
-      $(this).val() ? $("#search-results").hide() : $("#search-results").show();
-    });
-    $("#search-query").keyup(function() {
-      if ($(this).val() ) {
-        $("#page-content").css("display", "none");
-      } else {
-        $("#page-content").css("display", "block");
-      }
-    });
-  });
   </script> 
-  <script type="text/javascript">
-      $(function() {
-        $('.multi > a').each(function() {
-          if(window.location.pathname == $(this).attr('href'))
-            $(this).parent().addClass('active');
-        });
-      });
-      $(".land-box").wrap("<a href='{{ post.url | prepend: site.baseurl }}'></a>");
-    </script>
   </body>
 </html>
