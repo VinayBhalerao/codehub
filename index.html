@@ -21,7 +21,7 @@ exclude_from_search: true
       <div class="land-box">
         {% for category in post.categories %}<a class="badge">{{category}}</a>{% endfor %}
         <h2><a href='{{ post.url | prepend: site.baseurl }}'>{{ post.title }}</a></h2>
-        <p>{{ post.excerpt | strip_html | truncatewords: 15 }}</p>
+        <p>{{ post.excerpt | strip_html | truncatewords: 10 }}</p>
       </div>
   {% endfor %}
 
