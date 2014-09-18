@@ -160,13 +160,21 @@
 <p><strong>Description:</strong> First of all, some of the money will go directly to the speakers to compensate their costs to come to Barcelona and give some great talks. If that's not convincing enough, we'll serve you refreshments, have two coffee breaks and a lunch break. And we're not talking conference food, but a Mediterranean-style menu, tapas, sandwiches and other snacks prepared by awesome local chefs.</p>
 
 <h3>nginx.conf</h3>
-<div class="highlight"><pre><code class="language-nginx" data-lang="nginx"><span class="lineno">1</span> <span class="k">location</span> <span class="p">=</span> <span class="s">/threescale_report</span> <span class="p">{</span>
-<span class="lineno">2</span> <span class="kn">internal</span><span class="p">;</span>
-<span class="lineno">3</span> <span class="kn">set</span> <span class="nv">$provider_key</span> <span class="s">&quot;PROVIDERKEY&quot;</span><span class="p">;</span>
-<span class="lineno">4</span>  
-<span class="lineno">5</span> <span class="kn">proxy_pass</span> <span class="s">http://threescale_backend/transactions.xml</span><span class="p">;</span>
-<span class="lineno">6</span> <span class="kn">proxy_set_header</span> <span class="s">Host</span> <span class="s">&quot;su1.3scale.net&quot;</span><span class="p">;</span>
-<span class="lineno">7</span> <span class="p">}</span></code></pre></div>
+<table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><code class="language-nginx" data-lang="nginx">1
+2
+3
+4
+5
+6
+7</code></pre></div></td><td class="code"><div class="highlight"><pre><span class="k">location</span> <span class="p">=</span> <span class="s">/threescale_report</span> <span class="p">{</span>
+<span class="kn">internal</span><span class="p">;</span>
+<span class="kn">set</span> <span class="nv">$provider_key</span> <span class="s">&quot;PROVIDERKEY&quot;</span><span class="p">;</span>
+ 
+<span class="kn">proxy_pass</span> <span class="s">http://threescale_backend/transactions.xml</span><span class="p">;</span>
+<span class="kn">proxy_set_header</span> <span class="s">Host</span> <span class="s">&quot;su1.3scale.net&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table>
 
 <h3>nginx.lua</h3>
 <div class="highlight"><pre><code class="language-lua" data-lang="lua"><span class="lineno"> 1</span> <span class="c1">--------------------------------------</span>
