@@ -497,19 +497,23 @@ h1 a i, .menu a i {
   padding: 15px;
   margin-bottom: 30px;
   float: left;
-  height: 200px;
+  height: 220px;
   background-color: #f4f8fa;
 }
 /* line 399, ../sass/prototype.scss */
-.land-box h2 {
+.land-box h2{
   text-align: center;
+  font-size: 1.6em;
 }
 /* line 401, ../sass/prototype.scss */
 .land-box h2 i {
   margin-left: 10px;
 }
+.land-box h2 a {
+  color: inherit;
+}
 /* line 405, ../sass/prototype.scss */
-a .land-box {
+.land-box {
   color: #444;
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
@@ -517,7 +521,7 @@ a .land-box {
   transition: all 0.3s ease;
 }
 /* line 409, ../sass/prototype.scss */
-a:hover .land-box {
+.land-box:hover {
   background-color: #EAF4Fb;
   border-color: #8DAEC9;
   color: #111;
