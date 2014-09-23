@@ -28,9 +28,3 @@ exclude_from_search: true
   <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
 
 </div>
-
-<script type="text/javascript">
-  $(function() {
-    $(".land-box").wrap("<a href='{{ post.url | prepend: site.baseurl }}'></a>");
-  });  
-</script>
