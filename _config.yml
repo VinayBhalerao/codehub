@@ -16,3 +16,8 @@ gems: ['jekyll-lunr-js-search']
 
 lunr_search:
   excludes: [index.html, about.md]
+
+exclude:
+- '*.yml'
+- '*file'
+- 'Gemfile.lock'
