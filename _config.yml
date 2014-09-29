@@ -9,7 +9,8 @@ github_username:  jerzyn
 # Build settings
 markdown: kramdown
 permalink: pretty
-include: search.json
+include:
+ - search.json
 
 highlighter: pygments
 gems: ['jekyll-lunr-js-search']
@@ -21,3 +22,4 @@ exclude:
 - '*.yml'
 - '*file'
 - 'Gemfile.lock'
+- vendor
