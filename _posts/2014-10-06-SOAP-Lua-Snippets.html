@@ -1,6 +1,6 @@
 ---
 layout: default
-title:TITLE
+title: SOAP based API integration through NGinx
 categories: Nginx Lua SOAP
 comments: true
 excerpt: By default when you download NGinx Config files from the 3Scale Integration wizard, the 3Scale authentication and reporting and authentication parameters are assumed to be in the HTTP Headers, body or parameters. This model is not applicable for SOAP requests. Here we place the relevant data in the SOAP Headers. Some mods to the NGinx lua are required to extra the data from here.
@@ -18,30 +18,35 @@ excerpt: By default when you download NGinx Config files from the 3Scale Integra
 <p><strong>6 mods to NGinx Lua file to extract and use data from SOAP Headers. For context see https://support.3scale.net/howtos/api-configuration#nginx-soap</strong></p>
 {% highlight lua linenos=table %}
 
+<p> This should go at the top of the file. It imports the lua xml module and creates a function to extract the passed element's value from the xml.
+<code>
 require("LuaXml")
 function extract_value(xmlpayload, val)
   return xmlpayload:find(val)[1]
 end
-... 
-...
+</code>
+<p>Instead of taking the path from the URL, we pass in the xml payload into function extract_usage and take it from there using the extract_value method.
+<code>
 function extract_usage_xxxxxxx(request, xmlpayload)
  
 local t = string.split(request," ")
 local method = t[1]
 local path = extract_value(xmlpayload, "t:method");
-... 
-...
+</code>
+<p>The user key is taken from the xml instead of the parameters.
+<code>
 ngx.req.read_body()
 local xmlpayload = xml.eval(ngx.req.get_body_data())        
 params.user_key = extract_value(xmlpayload, "t:ApiKey")
-... 
-...
+</code>
+<p>
+<code>Add the full path to your SOAP endpoint.
 ngx.var.proxy_pass = "http://backend_www.your-api.com/path/to/your/api"
-... 
-...
+</code>
+<p>
+<code>Pass in the xml payload into the extract_usage method.
 ngx.var.usage = extract_usage_xxxxxxxx(ngx.var.request, xmlpayload)
-
-
+</code>
 
 
 {% endhighlight %}
