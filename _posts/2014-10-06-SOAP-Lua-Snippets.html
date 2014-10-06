@@ -16,36 +16,39 @@ excerpt: By default when you download NGinx Config files from the 3Scale Integra
 <dd>Lua</dd>
 </dl>
 <p><strong>6 mods to NGinx Lua file to extract and use data from SOAP Headers. For context see https://support.3scale.net/howtos/api-configuration#nginx-soap</strong></p>
-{% highlight lua linenos=table %}
 
 <p> This should go at the top of the file. It imports the lua xml module and creates a function to extract the passed element's value from the xml.
-<code>
+{% highlight lua linenos=table %}
 require("LuaXml")
 function extract_value(xmlpayload, val)
   return xmlpayload:find(val)[1]
 end
-</code>
+{% endhighlight %}
+
 <p>Instead of taking the path from the URL, we pass in the xml payload into function extract_usage and take it from there using the extract_value method.
-<code>
+{% highlight lua linenos=table %}
 function extract_usage_xxxxxxx(request, xmlpayload)
  
 local t = string.split(request," ")
 local method = t[1]
 local path = extract_value(xmlpayload, "t:method");
-</code>
+{% endhighlight %}
+
 <p>The user key is taken from the xml instead of the parameters.
-<code>
+{% highlight lua linenos=table %}
 ngx.req.read_body()
 local xmlpayload = xml.eval(ngx.req.get_body_data())        
 params.user_key = extract_value(xmlpayload, "t:ApiKey")
-</code>
-<p>Add the full path to your SOAP endpoint.
-<code>
-ngx.var.proxy_pass = "http://backend_www.your-api.com/path/to/your/api"
-</code>
-<p>Pass in the xml payload into the extract_usage method.
-<code>
-ngx.var.usage = extract_usage_xxxxxxxx(ngx.var.request, xmlpayload)
-</code>
-
 {% endhighlight %}
+
+<p>Add the full path to your SOAP endpoint.
+{% highlight lua linenos=table %}
+ngx.var.proxy_pass = "http://backend_www.your-api.com/path/to/your/api"
+{% endhighlight %}
+
+<p>Pass in the xml payload into the extract_usage method.
+{% highlight lua linenos=table %}
+ngx.var.usage = extract_usage_xxxxxxxx(ngx.var.request, xmlpayload)
+{% endhighlight %}
+
+
