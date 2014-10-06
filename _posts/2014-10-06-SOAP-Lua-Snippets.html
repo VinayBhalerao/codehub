@@ -39,14 +39,13 @@ ngx.req.read_body()
 local xmlpayload = xml.eval(ngx.req.get_body_data())        
 params.user_key = extract_value(xmlpayload, "t:ApiKey")
 </code>
-<p>
-<code>Add the full path to your SOAP endpoint.
+<p>Add the full path to your SOAP endpoint.
+<code>
 ngx.var.proxy_pass = "http://backend_www.your-api.com/path/to/your/api"
 </code>
-<p>
-<code>Pass in the xml payload into the extract_usage method.
+<p>Pass in the xml payload into the extract_usage method.
+<code>
 ngx.var.usage = extract_usage_xxxxxxxx(ngx.var.request, xmlpayload)
 </code>
-
 
 {% endhighlight %}
