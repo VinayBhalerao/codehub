@@ -1,0 +1,46 @@
+layout: default
+title:TITLE
+categories: Nginx Lua SOAP
+comments: true
+excerpt: By default when you download NGinx Config files from the 3Scale Integration wizard, the 3Scale authentication and reporting and authentication parameters are assumed to be in the HTTP Headers, body or parameters. This model is not applicable for SOAP requests. Here we place the relevant data in the SOAP Headers. Some mods to the NGinx lua are required to extra the data from here.
+---
+
+<h1>{{ page.title }}</h1>
+<dl>
+<dt>Author:</dt>
+<dd>Tom Corcoran (https://gist.github.com/tnscorcoran)</dd>
+<dt>Version:</dt>
+<dd>1.0</dd>
+<dt>Language:</dt>
+<dd>Lua</dd>
+</dl>
+<p><strong>6 mods to NGinx Lua file to extract and use data from SOAP Headers. For context see https://support.3scale.net/howtos/api-configuration#nginx-soap</strong></p>
+{% highlight lua linenos=table %}
+
+require("LuaXml")
+function extract_value(xmlpayload, val)
+  return xmlpayload:find(val)[1]
+end
+... 
+...
+function extract_usage_xxxxxxx(request, xmlpayload)
+ 
+local t = string.split(request," ")
+local method = t[1]
+local path = extract_value(xmlpayload, "t:method");
+... 
+...
+ngx.req.read_body()
+local xmlpayload = xml.eval(ngx.req.get_body_data())        
+params.user_key = extract_value(xmlpayload, "t:ApiKey")
+... 
+...
+ngx.var.proxy_pass = "http://backend_www.your-api.com/path/to/your/api"
+... 
+...
+ngx.var.usage = extract_usage_xxxxxxxx(ngx.var.request, xmlpayload)
+
+
+
+
+{% endhighlight %}
