@@ -1,0 +1,23 @@
+---
+layout: default
+title: SOAP snippets
+exclude_from_search: true
+---
+
+<div class="home">
+
+  <h1>SOAP snippets</h1>
+
+    {% for post in site.posts %}
+      {% for category in post.categories %}
+        {% if category == "soap" %}
+          <div class="land-box">
+            {% for category in post.categories %}<a class="badge">{{category}}</a>{% endfor %}
+            <h2><a href='{{ post.url | prepend: site.baseurl }}'>{{ post.title }}</a></h2>
+            <p>{{ post.excerpt | strip_html | truncatewords: 10 }}</p>
+          </div>
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+
+</div>
