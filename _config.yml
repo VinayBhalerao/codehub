@@ -13,7 +13,7 @@ include:
  - search.json
 
 highlighter: pygments
-gems: ['jekyll-lunr-js-search', 'jekyll-compass']
+gems: ['jekyll-lunr-js-search']
 
 lunr_search:
   excludes: [index.html, about.md]
