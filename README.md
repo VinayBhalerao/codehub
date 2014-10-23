@@ -46,5 +46,9 @@
 8. Create a pull request in the [CodeHub](https://github.com/3scale/codehub) repository.
 9. Wait until it is merged and deployed
 
+## What if I don't know how to use Git?
+
+Don't worry, you can file your idea as an issue [here](https://github.com/3scale/codehub/issues/new).
+
 ## Misc
 The project is created using [Jekyll](http://jekyllrb.com) blogging platform using the [jekyll-lunr-js-search](https://github.com/slashdotdash/jekyll-lunr-js-search) plugin.
