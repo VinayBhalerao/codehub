@@ -256,13 +256,13 @@ h1 a i, .menu a i {
   border-radius: 0;
   padding: 0;
   line-height: 49px;
-  font-size: 1.4em;
+  font-size: 1.3em;
   border: none;
 }
 @media (max-width: 1200px) {
   /* line 190, ../sass/prototype.scss */
   .btn.btn-primary, .btn.btn-default {
-    font-size: 1.3em;
+    font-size: 1.2em;
   }
 }
 /* line 202, ../sass/prototype.scss */
