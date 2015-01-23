@@ -1,0 +1,46 @@
+---
+layout: default
+title: Hiding deleted applications in the developer portal
+categories: HTML Liquid Developerportal
+comments: true
+excerpt: Applications cannot be deleted in 3scale unless the account that owns them is deleted. A workaround is having an application plan named 'deleted' where you move applications that you would want to delete. Then, using the following code in the Applications > Index page of the developer portal, applications have been moved to the 'deleted' plan will not appear in the list.
+---
+
+<h1>{{ page.title }}</h1>
+<dl>
+	<dt>Author:</dt>
+		<dd>Victor Delgado</dd>
+	<dt>Version:</dt>
+		<dd>1.0</dd>
+	<dt>Language:</dt>
+		<dd>HTML, Liquid</dd>
+</dl>
+<p><strong>Description:</strong>By replacing the default get_auth_params function by the one in this snippet it will be possible to send the user_key in the Authorization header in Basic Auth format: "Basic <user_key>"</p>
+
+{% highlight html linenos=table %}
+<!-- This code should be located in the table body of the applications/index page -->
+<tbody>
+  {% for application in service.applications %}
+    <!-- Filter out 'deleted' applications. Note that the comparison is performed agains the system_name of the plan.-->
+    {% unless application.plan.system_name == 'deleted' %}
+      <tr class="{% cycle 'applications': 'odd', 'even' %}" id="application_{{ application.id }}">
+        <td>
+          {{ application.name | link_to: application.url }}
+        </td>
+        {% if provider.multiple_services_allowed? %}
+          <td>{{ service.name }}</td>
+        {% endif %}
+        <td>{{ application.key }}</td>
+        <td>{{ application.state }}</td>
+        <td>
+          {% if application.can.be_updated? %}
+            <a href="{{ application.edit_url }}">
+              <i class="icon-pencil"></i>
+            </a>
+          {% endif %}
+        </td>
+      </tr>
+    {% endunless %}
+  {% endfor %}
+</tbody>
+{% endhighlight %}
