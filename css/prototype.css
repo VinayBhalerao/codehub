@@ -697,3 +697,15 @@ a .side-box {
 form.col-md-10 {
   padding: 0;
 }
+.yellow {
+  border-left: 1px solid #eea236;
+  border-right: 1px solid #d58512;
+}
+
+.yellow a.btn {
+  background-color: #f0ad4e;
+  color:#fff;
+}
+.yellow a.btn:hover {
+  background-color: #ec971f;
+}
