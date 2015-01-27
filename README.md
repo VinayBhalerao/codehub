@@ -29,10 +29,11 @@
   <dt>Language:</dt>
   <dd>PROGRAMMING_LANGUAGE_THE_SNIPPET_IS_WRITTEN_IN</dd>
   </dl>
-  <p><strong>A SHORT DESCRIPTION</strong></p>
+  <p><strong>Description:</strong>A SHORT DESCRIPTION</p>
   ```
   
-5. Add the snippet code together with some additional comments/descriptions. The code itself will go between `{% highlight LANG linenos=table %}` and `{% endhighlight %}` liquid tags. In the place of the `LANG` placeholder you should put the proper language identifier, e.g. *lua*. The fill list of the supported languages can be found [here](http://pygments.org/docs/lexers/) under the *Short names* parameter.
+5. Add the snippet code together with some additional comments/descriptions. The code itself will go between `{% highlight LANG linenos=table %}` and `{% endhighlight %}` liquid tags. In the place of the `LANG` placeholder you should put the proper language identifier, e.g. *lua*. The fill list of the supported languages can be found [here](http://pygments.org/docs/lexers/) under the *Short names* parameter. 
+NOTE: If the snippet is containing some liquid tags, you should wrap them between `{% raw %}` and `{% endraw %}` tags.
 6. Create a new branch for your snippet 
   ``git checkout -b BRANCHNAME``
 7. Commit the branch to the repository:
