@@ -709,3 +709,6 @@ form.col-md-10 {
 .yellow a.btn:hover {
   background-color: #ec971f;
 }
+.highlighttable pre {
+  word-break: normal;
+}
