@@ -18,6 +18,7 @@ excerpt: Applications cannot be deleted in 3scale unless the account that owns t
 <p><strong>Description:</strong>By replacing the default get_auth_params function by the one in this snippet it will be possible to send the user_key in the Authorization header in Basic Auth format: "Basic <user_key>"</p>
 
 {% highlight html linenos=table %}
+  {% raw %}
 <!-- This code should be located in the table body of the applications/index page -->
 <tbody>
   {% for application in service.applications %}
@@ -43,4 +44,5 @@ excerpt: Applications cannot be deleted in 3scale unless the account that owns t
     {% endunless %}
   {% endfor %}
 </tbody>
+  {% endraw %}
 {% endhighlight %}
