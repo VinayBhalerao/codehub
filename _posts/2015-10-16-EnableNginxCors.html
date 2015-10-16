@@ -17,7 +17,9 @@ excerpt: This snippet will help you to enable CORS at nginx
 </dl>
 <p><strong>Description:</strong>If you hit below error, remember to enable CORS on nginx 
 
-XMLHttpRequest cannot load https://api.test.com//bookings.json?from=2014-10-01&ar…to=2014-10-01&api_key=<api_key>&_=444444. No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'null' is therefore not allowed access. 
+XMLHttpRequest cannot load https://api.test.com/api_key=<api_key>&_=444444. No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'null' is therefore not allowed access. </p>
+
+{% highlight LANG linenos=table %} 
 
 In the nginx.conf, You can add following line in location / block
 
@@ -32,6 +34,6 @@ But if you are using https protocol and invoking nginx IA then you can add below
 
 Important links and sources:
 http://enable-cors.org/server_nginx.html
-http://blog.themillhousegroup.com/2013/05/nginx-as-cors-enabled-https-proxy.html</p>
+http://blog.themillhousegroup.com/2013/05/nginx-as-cors-enabled-https-proxy.html
 
-{% highlight LANG linenos=table %} 
+{% endhighlight %}
