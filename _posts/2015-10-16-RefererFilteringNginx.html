@@ -1,0 +1,36 @@
+---
+layout: default
+title: Enabling referrer filtering in Nginx
+categories: Nginx
+comments: true
+excerpt: Using this snippet in your nginx.conf, 3scale will check during the authentication step if the origin of an API call matches the one defined for that application.
+---
+
+<h1>{{ page.title }}</h1>
+<dl>
+  <dt>Author:</dt>
+    <dd><a href="https://github.com/vdel26">Victor Delgado</a></dd>
+  <dt>Version:</dt>
+    <dd>1.0</dd>
+  <dt>Language:</dt>
+    <dd>Nginx</dd>
+</dl>
+<p>
+<strong>Description:</strong>
+ Using this snippet in your nginx.conf, 3scale will check during the authentication step if the origin of an API call matches the one defined for that application.
+ Requires enabling the "Referrer Filtering" feature in your 3scale account. See <a href="https://support.3scale.net/forum/topics/hit-limits-by-ip">here</a> how.
+ Nginx will take the data from the <a href="http://tools.ietf.org/html/rfc7231#section-5.5.2">'Referer' header</a>.
+</p>
+
+
+{% highlight nginx linenos=table %}
+# replace the following location block in your nginx.conf file
+location = /threescale_authrep {
+  internal;
+  set $provider_key "YOUR_PROVIDER_KEY";
+
+  proxy_pass http://threescale_backend/transactions/authrep.xml?provider_key=$provider_key&service_id=$service_id&$usage&$credentials&referrer=$http_referer;
+  proxy_set_header  Host  "su1.3scale.net";
+  proxy_set_header  X-3scale-User-Agent "nginx$deployment";
+}
+{% endhighlight %}
