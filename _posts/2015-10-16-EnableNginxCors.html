@@ -3,7 +3,7 @@ layout: default
 title: Enable CORS in nginx
 categories: nginx
 comments: true
-excerpt: This snippet will help you to enable CORS at nginx 
+excerpt: This snippet will help you to enable CORS at nginx
 ---
 
 <h1>{{ page.title }}</h1>
@@ -15,25 +15,82 @@ excerpt: This snippet will help you to enable CORS at nginx
 <dt>Language:</dt>
 <dd>Nginx</dd>
 </dl>
-<p><strong>Description:</strong>If you hit below error, remember to enable CORS on nginx 
+<p><strong>Description:</strong> If you are using Nginx for your 3scale integration and you need to allow <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">cross-origin requests</a> from web browsers to your API, you can do it using the snippet shown below.</p>
 
-XMLHttpRequest cannot load https://api.test.com/api_key=<api_key>&_=444444. No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'null' is therefore not allowed access. </p>
+<p>If you have tried before to make a cross-origin request from a browser, you might have noticed an error like the following:</p>
+<pre><code>
+  XMLHttpRequest cannot load https://api.test.com/api_key=<api_key>&_=444444. No 'Access-Control-Allow-Origin' header is present on the requested resource. Origin 'null' is therefore not allowed access.
+</code></pre>
 
-{% highlight nginx linenos=table %} 
+<p>Adding the following snippet to your <strong>nginx.conf</strong> file will solve that issue. To enable it you will need to find the <code>location /</code> section in that file and add the following lines:</p>
 
-In the nginx.conf, You can add following line in location / block
+{% highlight nginx linenos=table %}
 
-add_header Access-Control-Allow-Origin *;
+#
+# Wide-open CORS config for nginx
+#
+location / {
 
-But if you are using https protocol and invoking nginx IA then you can add below snippet in location / block
+  if ($request_method = 'OPTIONS') {
 
- more_set_headers 'Access-Control-Allow-Origin: *';
- more_set_headers 'Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE';
- more_set_headers 'Access-Control-Allow-Credentials: true';
- more_set_headers 'Access-Control-Allow-Headers: Origin,Content-Type,Accept';
+    add_header 'Access-Control-Allow-Origin' '*';
 
-Important links and sources:
-http://enable-cors.org/server_nginx.html
-http://blog.themillhousegroup.com/2013/05/nginx-as-cors-enabled-https-proxy.html
+    #
+    # cookies
+    #
+
+    add_header 'Access-Control-Allow-Credentials' 'true';
+    add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+
+    #
+    # Custom headers and headers various browsers *should* be OK with but aren't
+    #
+
+    add_header 'Access-Control-Allow-Headers' 'DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+
+    #
+    # Tell client that this pre-flight info is valid for 20 days
+    #
+
+    add_header 'Access-Control-Max-Age' 1728000;
+    add_header 'Content-Type' 'text/plain charset=UTF-8';
+    add_header 'Content-Length' 0;
+
+    return 204;
+  }
+
+  if ($request_method = 'POST') {
+
+    add_header 'Access-Control-Allow-Origin' '*';
+    add_header 'Access-Control-Allow-Credentials' 'true';
+    add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+    add_header 'Access-Control-Allow-Headers' 'DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+
+  }
+
+  if ($request_method = 'GET') {
+
+    add_header 'Access-Control-Allow-Origin' '*';
+    add_header 'Access-Control-Allow-Credentials' 'true';
+    add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
+    add_header 'Access-Control-Allow-Headers' 'DNT,X-Mx-ReqToken,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type';
+
+  }
+
+  ###
+  # here goes the previous content of your "location /" section
+  ###
+
+}
 
 {% endhighlight %}
+
+<p>Originally posted by <a href="Michiel Kalkman">Michiel Kalkman</a> as a <a href="https://gist.github.com/michiel/1064640">Gist</a>.
+
+<p>Other relevant links and resources:</p>
+<ul>
+  <li>https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS</li>
+  <li>http://enable-cors.org/server_nginx.html</li>
+  <li>http://blog.themillhousegroup.com/2013/05/nginx-as-cors-enabled-https-proxy.html</li>
+</ul>
+
