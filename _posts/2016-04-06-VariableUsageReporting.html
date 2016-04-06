@@ -16,6 +16,7 @@ excerpt: How to report a variable usage based on a header response from the API
 <dd>Lua</dd>
 </dl>
 <p><strong>Description:</strong>This snippet is showing how to report a variable usage basing on the header value from the API response. This code should overwrite what is in the <code>out_of_band_authrep_action</code> or <code>out_of_band_oauth_authrep_action</code> (depending on your authentication pattern) in your <code>nginx.conf</code> file.</p>
+
 {% highlight lua linenos=table %}
 local method, path, headers = ngx.req.get_method(), ngx.var.request_uri, ngx.req.get_headers()
 
