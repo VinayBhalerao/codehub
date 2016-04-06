@@ -1,0 +1,73 @@
+---
+layout: default
+title: Variable Usage Reporting
+categories: Nginx, Lua, Reporting
+comments: true
+excerpt: How to report a variable usage based on a header response from the API
+---
+
+<h1>{{ page.title }}</h1>
+<dl>
+<dt>Author:</dt>
+<dd><a href="https://github.com/jerzyn">Andrzej Jarzyna</a></dd>
+<dt>Version:</dt>
+<dd>v1.0</dd>
+<dt>Language:</dt>
+<dd>Lua</dd>
+</dl>
+<p><strong>Description:</strong>This snippet is showing how to report a variable usage basing on the header value from the API response. This code should overwrite what is in the <code>out_of_band_authrep_action</code> or <code>out_of_band_oauth_authrep_action</code> (depending on your authentication pattern) in your <code>nginx.conf</code> file.</p>
+{% highlight lua linenos=table %}
+local method, path, headers = ngx.req.get_method(), ngx.var.request_uri, ngx.req.get_headers()
+
+-- String split function added for string transformations
+function string:split(delimiter)
+  local result = { }
+  local from = 1
+  local delim_from, delim_to = string.find( self, delimiter, from )
+  if delim_from == nil then return {self} end
+  while delim_from do
+    table.insert( result, string.sub( self, from , delim_from-1 ) )
+    from = delim_to + 1
+    delim_from, delim_to = string.find( self, delimiter, from )
+  end
+  table.insert( result, string.sub( self, from ) )
+  return result
+end
+
+local req = cjson.encode{method=method, path=path, headers=headers}
+local resp = cjson.encode{ body = ngx.var.resp_body, headers = cjson.decode(ngx.var.resp_headers)}
+--Extracting headers from the API response
+local all_headers = cjson.decode(ngx.var.resp_headers)
+--ngx.log(0, "Original usage: "..ngx.var.usage)
+-- X-Usage is a sample name of the header which returns a variable usage value. It is important, that the case is the same. In case it will not report correctly, please verify if your system returns a capitalized name for the header and if not, change it to small letters (line 22 and 23)
+local variable_header = "X-Usage"
+if all_headers[variable_header] then
+    local usage_header = all_headers[variable_header]
+    local usage_per_metric = ngx.var.usage:split("&")
+    -- Please assign a proper name for the metric here:
+    local variable_usage_metric_name = "METRIC_NAME"
+    -- Leave empty
+    local new_usage = ""
+    for i in pairs(usage_per_metric) do
+        if usage_per_metric[i]:match(variable_usage_metric_name) then
+            usage_per_metric[i] = 'usage['..variable_usage_metric_name..']='..usage_header
+        end
+        new_usage = new_usage.."&"..usage_per_metric[i]
+    end    
+    --ngx.log(0, "New usage: \n"..new_usage)
+    ngx.var.usage = new_usage
+end
+
+-- Standard out_of_band authrep action
+local cached_key = ngx.var.cached_key
+if cached_key ~= nil and cached_key ~= "null" then
+  local status_code = ngx.var.status
+  local res1 = ngx.location.capture("/threescale_oauth_authrep?code=".. status_code .. "&req=" .. ngx.escape_uri(req) .. "&resp=" .. ngx.escape_uri(resp), { share_all_vars = true })
+  if res1.status ~= 200 then
+    local access_tokens = ngx.shared.api_keys
+    access_tokens:delete(cached_key)
+  end
+end
+
+ngx.exit(ngx.HTTP_OK)
+{% endhighlight %}
