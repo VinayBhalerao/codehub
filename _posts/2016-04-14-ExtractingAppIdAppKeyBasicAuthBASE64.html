@@ -1,0 +1,55 @@
+---
+layout: default
+title: Basic Auth. Extracting AppId & AppKey from BASE64 encoded Authorization header
+categories: Nginx Lua Authentication
+comments: true
+excerpt: By replacing the lua call to the get_auth_params function with the extractAuthHeader one in this snippet it will be possible to send the appid/appkey pair in the Authorization header in Basic Auth format&#58; "Basic <BASE64(appid:appkey)>"
+---
+
+<h1>{{ page.title }}</h1>
+<dl>
+	<dt>Author:</dt>
+		<dd>Tom Corcoran</dd>
+	<dt>Version:</dt>
+		<dd>1.0</dd>
+	<dt>Language:</dt>
+		<dd>Lua</dd>
+</dl>
+<p><strong>Description:</strong>By replacing the lua call to the get_auth_params function with the extractAuthHeader() one in this snippet it will be possible to send the appid/appkey pair in the Authorization header in Basic Auth format&#58; "Basic <BASE64(appid:appkey)>"</p>
+
+{% highlight lua linenos=table %}
+ 
+-- encoding
+function encode(data)
+// function to base-64 encode "data"
+end
+
+-- decoding
+function decode(data)
+// function to base-64 decode "data"
+end
+
+function extractAuthHeader()
+  local params = {}
+  params = ngx.req.get_headers()
+
+  if params["Authorization"] then
+    local m = ngx.re.match(params["Authorization"], "Basic\\s(.+)")
+    local decoded = decode(m[1])
+
+    params.app_id = string.split(decoded, ":")[1]
+    params.app_id = params.app_id:gsub("%s+", "") --trim spaces
+
+    params.app_key = string.split(decoded, ":")[2]
+    params.app_key = params.app_key:gsub("%s+", "") --trim spaces
+  end
+  return first_values(params)
+end
+
+--In service specific block towards the end of the lua file, replace:
+--local parameters = get_auth_params(<params>)
+--with:
+local parameters = extractAuthHeader()
+
+
+{% endhighlight %}
