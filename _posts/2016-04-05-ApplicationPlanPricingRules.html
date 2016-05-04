@@ -1,0 +1,47 @@
+---
+layout: default
+title: Showing pricing rules for appliation plans
+categories: HTML Liquid Developerportal
+comments: true
+excerpt: This snippet will show the pricing rules for a specific application plan
+---
+
+<h1>{{ page.title }}</h1>
+<dl>
+  <dt>Author:</dt>
+    <dd>Daria Mayorova</dd>
+  <dt>Version:</dt>
+    <dd>1.0</dd>
+  <dt>Language:</dt>
+    <dd>HTML, Liquid</dd>
+</dl>
+<p><strong>Description:</strong> </p>
+
+{% highlight html linenos=table %}
+{% raw %}
+<!-- "plan" variable should be is an instance of the ApplicationPlan drop -->
+{% for metric in plan.metrics %}
+<ul>
+  {% if metric.pricing_rules.size > 0 %}
+  <li>
+    <p>For {{ metric.name }}: </p>
+    {% for pricing_rule in metric.pricing_rules %}
+      {% if pricing_rule.plan.name == plan.name %}
+      <ul>
+        <li>
+          {% if pricing_rule.max == "&#8734;" %}  <!-- infinity --> 
+            Over {{ pricing_rule.min  | minus: 1 }} hits:
+          {% else %}
+            From {{ pricing_rule.min }} to {{ pricing_rule.max }} hits:
+          {% endif %}
+          {{ pricing_rule.cost_per_unit }} per hit.
+        </li>
+      </ul>  
+      {% endif %}
+    {% endfor %}
+  </li>
+  {% endif %}
+</ul> 
+{% endfor %}
+{% endraw %}
+{% endhighlight %}
