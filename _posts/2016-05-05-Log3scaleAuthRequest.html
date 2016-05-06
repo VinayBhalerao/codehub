@@ -1,0 +1,35 @@
+---
+layout: default
+title: Troubleshooting Authorization Failures
+categories: Nginx Lua Authentication
+comments: true
+excerpt: Re-uses the X-3scale-debug header to add additional logging to the nginx log to view: 1. headers sent to 3scale 2. Actual request made to 3scale and 3. Response from 3scale
+---
+
+
+<h1>{{ page.title }}</h1>
+<dl>
+  <dt>Author:</dt>
+    <dd>Pili Guerra Arias</dd>
+  <dt>Version:</dt>
+    <dd>1.0</dd>
+  <dt>Language:</dt>
+    <dd>Lua, Nginx</dd>
+</dl>
+<p><strong>Description:</strong>Re-uses the X-3scale-debug header to add additional logging to the nginx log to view: 
+  <ol><li>headers sent to 3scale</li><li>Actual request made to 3scale, and</li><li>Response from 3scale</li></ol> This snippet should be added inside the authorization location that is failing.</p>
+
+{% highlight lua linenos=table %}
+      body_filter_by_lua_block{
+        if ngx.req.get_headers()["X-3scale-debug"] == 'YOUR_PROVIDER_KEY' then
+          local resp = ""
+          ngx.ctx.buffered = (ngx.ctx.buffered or "") .. string.sub(ngx.arg[1], 1, 1000)
+          if ngx.arg[2] then
+            resp = ngx.ctx.buffered
+          end
+
+          ngx.log(0, ngx.req.raw_header())
+          ngx.log(0, resp)
+        end
+      }
+{% endhighlight %}
