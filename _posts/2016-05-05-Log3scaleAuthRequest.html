@@ -21,7 +21,7 @@ excerpt: Add additional logging to the nginx error log to view authorization req
 
 {% highlight lua linenos=table %}
       body_filter_by_lua_block{
-        if ngx.req.get_headers()["X-3scale-debug"] == 'YOUR_PROVIDER_KEY' then
+        if ngx.req.get_headers()["X-3scale-debug"] == ngx.var.provider_key then
           local resp = ""
           ngx.ctx.buffered = (ngx.ctx.buffered or "") .. string.sub(ngx.arg[1], 1, 1000)
           if ngx.arg[2] then
