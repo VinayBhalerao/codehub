@@ -47,7 +47,7 @@ excerpt: Get a CSV extract of all applications including their keys.
       @applications = []
       @base_url = base_url
       @provider_key = provider_key
-      @outfile = outfile || "keys.csv"
+      @outfile = outfile || 'keys.csv'
     end
 
     def run
@@ -64,7 +64,7 @@ excerpt: Get a CSV extract of all applications including their keys.
         }
       }
       response = HTTParty.get("#{@base_url}/admin/api/applications.xml", options)
-      raise "Error while fetching applications" unless response.code == 200
+      raise 'Error while fetching applications' unless response.code == 200
       response['applications'].nil? ? false : response['applications']['application']
     end
 
@@ -86,7 +86,7 @@ excerpt: Get a CSV extract of all applications including their keys.
           csv << row
         end
       end
-      puts "All applications exported successfully"
+      puts 'All applications exported successfully'
     end
 
   end
@@ -94,14 +94,20 @@ excerpt: Get a CSV extract of all applications including their keys.
   options = {}
 
   parser = OptionParser.new do |parser|
+
     parser.banner = 'ruby export-keys.rb [options]'
 
-    parser.on('-s', '--source SOURCE', "Account. Format: https://<providerkey>@<orgname>-admin.3scale.net") do |url|
-      options[:provider_key] = url[/\w*@/][0..-2]
-      options[:base_url] = url.sub /\w*@/, ''
+    parser.on('-s', '--source SOURCE', 'Account. Format: https://<providerkey>@<orgname>-admin.3scale.net') do |url|
+      begin
+        options[:provider_key] = url[/\w*@/][0..-2]
+        options[:base_url] = url.sub /\w*@/, ''
+      rescue
+        puts 'Invalid source'
+        exit
+      end
     end
 
-    parser.on('-f', '--fileout FILENAME', "Name of the CSV file that will be created") do |file|
+    parser.on('-f', '--fileout FILENAME', 'Name of the CSV file that will be created') do |file|
       options[:outfile] = file
     end
 
@@ -113,6 +119,14 @@ excerpt: Get a CSV extract of all applications including their keys.
   end
 
   parser.parse!
+
+  required_opts = [:provider_key, :base_url, :outfile].all? { |e| options.include?(e) }
+  if not required_opts
+    puts 'Error: missing arguments'
+    puts
+    puts parser
+    exit
+  end
 
   client = ApplicationsExport.new(
     options[:base_url],
