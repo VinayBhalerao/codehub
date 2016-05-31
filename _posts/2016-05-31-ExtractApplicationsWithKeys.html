@@ -1,0 +1,138 @@
+---
+layout: default
+title: Extract Applications including keys in CSV format
+categories: reporting
+comments: true
+excerpt: Get a CSV extract of all applications including their keys.
+
+---
+
+
+<h1>{{ page.title }}</h1>
+<dl>
+  <dt>Author:</dt>
+    <dd><a href="https://github.com/vdel26">Victor Delgado</a></dd>
+  <dt>Version:</dt>
+    <dd>1.0</dd>
+  <dt>Language:</dt>
+    <dd>Ruby</dd>
+</dl>
+<div>
+  <p>Get a CSV extract of all applications including their keys.</p>
+  <p>Usage: </p>
+  <code>
+  ruby export-keys.rb [options]
+      -s, --source SOURCE              Account. Format: https://<providerkey>@<orgname>-admin.3scale.net
+      -f, --fileout FILENAME           Name of the CSV file that will be created
+      -h, --help                       Prints this help
+  </code>
+  <p>Example:</p>
+  <code>
+  ruby export-keys.rb --source https://123456abc@mycompany-admin.3scale.net --fileout mykeys.csv
+  </code>
+</div>
+
+
+{% highlight ruby linenos=table %}
+
+  #!/usr/bin/env ruby
+
+  require 'HTTParty'
+  require 'optparse'
+  require 'csv'
+
+  class ApplicationsExport
+
+    def initialize(base_url, provider_key, outfile)
+      @applications = []
+      @base_url = base_url
+      @provider_key = provider_key
+      @outfile = outfile || 'keys.csv'
+    end
+
+    def run
+      get_all_applications
+      write_output_csv
+    end
+
+    def get_applications(page, per_page)
+      options = {
+        query: {
+          provider_key: @provider_key,
+          page: page,
+          per_page: per_page
+        }
+      }
+      response = HTTParty.get("#{@base_url}/admin/api/applications.xml", options)
+      raise 'Error while fetching applications' unless response.code == 200
+      response['applications'].nil? ? false : response['applications']['application']
+    end
+
+    def get_all_applications
+      i = 1
+      while apps = get_applications(i, 100)
+        break unless apps
+        @applications << apps
+        puts "Fetching page #{i}"
+        i += 1
+      end
+    end
+
+    def write_output_csv
+      CSV.open(@outfile, 'w') do |csv|
+        csv << [ 'user_key' , 'service_id', 'name', 'created_at', 'plan name', 'plan id' ]
+        @applications.flatten(1).each do |app|
+          row = [ app['user_key'], app['service_id'], app['name'], app['created_at'], app['plan']['name'], app['plan']['id'] ]
+          csv << row
+        end
+      end
+      puts 'All applications exported successfully'
+    end
+
+  end
+
+  options = {}
+
+  parser = OptionParser.new do |parser|
+
+    parser.banner = 'ruby export-keys.rb [options]'
+
+    parser.on('-s', '--source SOURCE', 'Account. Format: https://<providerkey>@<orgname>-admin.3scale.net') do |url|
+      begin
+        options[:provider_key] = url[/\w*@/][0..-2]
+        options[:base_url] = url.sub /\w*@/, ''
+      rescue
+        puts 'Invalid source'
+        exit
+      end
+    end
+
+    parser.on('-f', '--fileout FILENAME', 'Name of the CSV file that will be created') do |file|
+      options[:outfile] = file
+    end
+
+    parser.on('-h', '--help', 'Prints this help') do
+      puts parser
+      puts
+      exit
+    end
+  end
+
+  parser.parse!
+
+  required_opts = [:provider_key, :base_url, :outfile].all? { |e| options.include?(e) }
+  if not required_opts
+    puts 'Error: missing arguments'
+    puts
+    puts parser
+    exit
+  end
+
+  client = ApplicationsExport.new(
+    options[:base_url],
+    options[:provider_key],
+    options[:outfile])
+
+  client.run
+
+{% endhighlight %}
