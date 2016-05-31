@@ -1,0 +1,59 @@
+---
+layout: default
+title: Pull multiple swagger spec on single cms page
+categories: HTML JS Developerportal
+comments: true
+excerpt: This snippet allows you to pull mulitple swagger json spec on single CMS page. 
+---
+
+<h1>{{ page.title }}</h1>
+<dl>
+	<dt>Author:</dt>
+		<dd><a href="https://github.com/VinayBhalerao">Vinay Bhalerao</a></dd>
+	<dt>Version:</dt>
+		<dd>1.0</dd>
+	<dt>Language:</dt>
+		<dd>HTML, Liquid</dd>
+</dl>
+<p><strong>Description:</strong>The snippet helps to pull multiple swagger json spec on single CMS page. The <code>system_name</code> should correctly match as given on active docs page</p>
+
+{% highlight ruby linenos=table %}
+{% raw %}
+
+{% active_docs version: "2.0" services: "system_name" %}
+
+<div class="swagger-section">
+  <div id="another-swagger-ui-container" class="swagger-ui-wrap"></div>
+</div>
+
+<script type="text/javascript">
+  $(function () {
+    window.swaggerUi.load(); // <-- loads first swagger-ui
+    
+    // do second swagger-ui
+    
+    var url = "/path_to/swagger.json";   // path to second swagger json file. You can upload the json spec in developer portal itself.
+    window.anotherSwaggerUi = new SwaggerUi({
+      url: url,
+      dom_id: "another-swagger-ui-container",
+      supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+      onComplete: function(swaggerApi, swaggerUi) {
+        $('#another-swagger-ui-container pre code').each(function(i, e) {hljs.highlightBlock(e)});
+      },
+      onFailure: function(data) {
+        log("Unable to Load Sentiment-SwaggerUI");
+      },
+      docExpansion: "list",
+      transport: function(httpClient, obj) {
+        log("[swagger-ui]>>> custom transport.");
+        return ApiDocsProxy.execute(httpClient, obj);
+      }
+    });
+    
+    window.anotherSwaggerUi.load();
+    
+  });
+</script>
+
+{% endraw %}
+{% endhighlight %}
